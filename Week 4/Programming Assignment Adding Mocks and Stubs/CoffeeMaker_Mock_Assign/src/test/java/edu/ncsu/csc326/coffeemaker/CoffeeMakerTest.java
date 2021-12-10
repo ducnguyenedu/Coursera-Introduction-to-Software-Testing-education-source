@@ -26,15 +26,6 @@ import org.junit.Test;
 import edu.ncsu.csc326.coffeemaker.exceptions.RecipeException;
 
 
-
-/**
- * Unit tests for CoffeeMaker class.
- * 
- * @author Sarah Heckman
- *
- * Extended by Mike Whalen
- */
-
 public class CoffeeMakerTest {
 	
 	//-----------------------------------------------------------------------
@@ -130,11 +121,83 @@ public class CoffeeMakerTest {
 	
 	// put your tests here!
 	
+
 	@Test
-	public void testMakeCoffee() {
-		coffeeMaker = new CoffeeMaker(recipeBookStub, new Inventory());
-		assertTrue(true);
+	public void testMakeCoffee01() throws RecipeException {
+		RecipeBook recipeServ = mock(RecipeBook.class);
+		Inventory inventServ = new Inventory(); //mock(Inventory.class);
+		when(recipeServ.getRecipes()).thenReturn(stubRecipies);
+		coffeeMaker = new CoffeeMaker(recipeServ, inventServ);
+		assertEquals(15, coffeeMaker.makeCoffee(0, 65));
+		assertEquals(12, inventServ.getCoffee() );
+	}
+	@Test
+	public void testMakeCoffee02() {
+		when(recipeBookStub.getRecipes()).thenReturn(stubRecipies);
+		coffeeMaker.addRecipe(stubRecipies[0]);
+		coffeeMaker.addRecipe(stubRecipies[1]);
+		coffeeMaker.addRecipe(stubRecipies[2]);
+		assertEquals(175, coffeeMaker.makeCoffee(4, 175));
+
+	}
+	@Test
+	public void testMakeCoffee1() {
+		when(recipeBookStub.getRecipes()).thenReturn(stubRecipies);
+		coffeeMaker.addRecipe(stubRecipies[0]);
+		assertEquals(75, coffeeMaker.makeCoffee(1, 75));
+	}
+	@Test
+	public void testMakeCoffee2() {
+		when(recipeBookStub.getRecipes()).thenReturn(stubRecipies);
+		coffeeMaker.addRecipe(stubRecipies[0]);
+		assertEquals(25, coffeeMaker.makeCoffee(0, 75));
+	}
+	@Test
+	public void testMakeCoffee3() {
+		when(recipeBookStub.addRecipe(stubRecipies[0])).thenReturn(true);
+		when(recipeBookStub.addRecipe(stubRecipies[1])).thenReturn(true);
+		when(recipeBookStub.addRecipe(stubRecipies[2])).thenReturn(true);
+		when(recipeBookStub.addRecipe(stubRecipies[2])).thenReturn(false);
+	}
+	@Test
+	public void testMakeCoffee4() {
+		when(recipeBookStub.addRecipe(stubRecipies[0])).thenReturn(true);
+		when(recipeBookStub.addRecipe(stubRecipies[1])).thenReturn(true);
+		when(recipeBookStub.addRecipe(stubRecipies[1])).thenReturn(false);
+		when(recipeBookStub.addRecipe(recipe4)).thenReturn(false);
+		when(recipeBookStub.addRecipe(stubRecipies[2])).thenReturn(true);
+	}
+	@Test
+	public void testDeleteRecipe()
+	{   coffeeMaker.addRecipe(stubRecipies[0]);
+		coffeeMaker.addRecipe(stubRecipies[1]);
+		coffeeMaker.addRecipe(stubRecipies[2]);
+		//coffeeMaker.addRecipe(stubRecipies[3]);
+		when(recipeBookStub.deleteRecipe(0)).thenReturn("Coffee");
+		when(recipeBookStub.deleteRecipe(1)).thenReturn("Mocha");
+		when(recipeBookStub.deleteRecipe(2)).thenReturn("Latte");
+		when(recipeBookStub.deleteRecipe(3)).thenReturn(null);
 	}
 
+	/*----------------------------------------------------------*/
+	@Test
+	public void testDummy() throws RecipeException {
+		when(recipeBookStub.getRecipes()).thenReturn(stubRecipies);
+		coffeeMaker.addRecipe(stubRecipies[2]);
+		assertEquals(stubRecipies[2].getName(), "Latte");
+		assertEquals(stubRecipies[2].getAmtChocolate(), 0);
+	}
+
+	@Test
+	public void testDummy2() throws Exception {
+		when(recipeBookStub.getRecipes()).thenReturn(stubRecipies);
+		coffeeMaker.addRecipe(stubRecipies[2]);
+		assertEquals(stubRecipies[2].getName(), "Latte");
+		assertEquals(stubRecipies[2].getAmtChocolate(), 0);
+		assertEquals(stubRecipies[2].getAmtCoffee(), 3);
+		assertEquals(stubRecipies[2].getAmtMilk(), 3);
+		assertEquals(stubRecipies[2].getAmtSugar(), 1);
+		assertEquals(stubRecipies[2].getPrice(), 100);
+	}
 	
 }
